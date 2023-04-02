@@ -6,6 +6,9 @@
 #' @details
 #' \code{removeFromArchive} deletes file from an archive.
 #'
+#' see help(createArchive) for details of other archiving functions and of the
+#' structure of the index.
+#'
 #' @param path path to the data archive
 #' @param id  id number(s) of entries to be deleted
 #'

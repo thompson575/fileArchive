@@ -6,7 +6,7 @@
 #' @details
 #' \code{checkArchive} checks that index and archive contents agree.
 #'
-#' see help(create_archive) for details of other archiving functions and of the contents of the index.
+#' see help(createArchive) for details of other archiving functions and of the contents of the index.
 #'
 #' @param path path to the archive
 #'

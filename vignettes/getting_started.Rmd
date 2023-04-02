@@ -96,7 +96,8 @@ For the file with the given id the existing tags are replaced by the newtags. If
 
 ## Example
 
-```{r eval=FALSE}
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
 library(fileArchive)
 
 # --- location of the archive
@@ -148,7 +149,7 @@ checkArchive(repo)
 readArchiveIndex(repo) %>%
   as_tibble() %>%
   filter( substr(filename, 
-                 strlen(filename)-2, strlen(filename)) == "rds" ) %>%
+                 nchar(filename)-2, nchar(filename)) == "rds" ) %>%
   arrange( desc(datetime)) -> rdsDF
 
 # --- read the most recent red file
