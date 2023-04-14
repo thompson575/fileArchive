@@ -35,7 +35,10 @@
 createArchive <- function(path) {
 
   # --- Does archive already exist? --------------------------------
-  if( file.exists(path) & length(list.files(path, all.files=TRUE, include.dirs = TRUE)) > 0 ) {
+  if( file.exists(path) & length(list.files(path,
+                                            all.files=TRUE,
+                                            include.dirs = TRUE,
+                                            no.. = TRUE)) > 0 ) {
     stop("Folder exists and is not empty")
   } else {
     # --- Does not exist .. create -----------------------------
