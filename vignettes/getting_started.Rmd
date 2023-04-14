@@ -20,7 +20,7 @@ library(fileArchive)
 
 ## What is fileArchive?
 
-fileArchive is package that creates and organises an indexed directory for saving files.   
+fileArchive is package that creates and organises an indexed archive of saved files.   
 
 The index is a data frame with one line for each file in the archive that is saved in the archive directory as `index.rds`.  
 
@@ -36,26 +36,26 @@ The columns of the index are
 
 The files saved in the archive may be in any format.
 
-Files may have the same 'name' field in the index; this enables multiple versions of the same data to be linked together. Versions can be distinguished by their id or their datetime.
+Files may have the same 'name' field in the index; this enables multiple versions of the same data to be linked together. Versions can be distinguished by their id, their datetime or their tags.
 
-Files are placed in the archive by copying them. In the archive, where possible the files are saved under their original filename. However, an attempt to reuse a filename that already exists in the archive will result in the file being renamed by the addition of "_vxx", where xx is a number. For instance, an attempt to copy myData.rds to an archive that already has a file called myData.rds would result in the second file being saved as my_Data_v1.rds.
+Files are placed in the archive by copying them. Where possible the files are saved under their original filename. However, an attempt to reuse a filename that already exists in the archive will result in the file being renamed by the addition of "_vxx", where xx is a number. For instance, an attempt to copy myData.rds to an archive that already has a file called myData.rds would result in the second file being saved as my_Data_v1.rds.
 
 Additions, Removals and Changes to the tags are automatically noted in a file history.txt that is also saved in the archive.
 
 The index field tags is a character string used to describe the file contents and to facilitate searching.  
 
-The package fileArchive is designed to be basic. For instance, there is no function to read the contents of a file in the archive and there are no helper functions to make searching the index easier. To search the index, read the index and use dplyr or base R code. To read a file, locate the filename in the index and the use whatever R function is appropriate to read the file.  
+The package fileArchive is deliberately minimalist. For instance, there is no function to read the contents of a file in the archive and there are no helper functions to make searching the index easier. To search the index, read the index with readRDS() and then use dplyr or base R code. To read a file, locate the filename in the index and the use whatever R function is appropriate to read the file.  
 
 
 ## fileArchive functions
 
-fileArchive has only six functions.
+fileArchive has only five functions.
 
 ### createArchive
 
 `createArchive(path)`  
 
-Creates an archive in the directory given by the `path` argument. If the directory already exists then it must be empty.
+Creates an archive in the directory given by the `path` argument. If the directory already exists then it must be empty. The new archive will contain an empty index.rds and a text file history.txt that just noted the data and time of the archive creation.
 
 ### copyToArchive
 
@@ -67,60 +67,58 @@ name is used to identify the file in the index. If replace=TRUE, then all existi
 
 If the filename already exists in the archive, then the file is renamed before it is copied to the archive by adding "_vxx" where xx is a number.  
 
-tags can be used when searching for data and may be structured as you wish. Sensible items to include in the tags might be the format of the file, the type of R object in the file or the code that produced that R object. 
+tags can be used when searching for data and may be structured as you wish. Sensible items to include in the tags might be the format of the file, the type of R object in the file and the name of the script that produced that R object. 
 
 ### removeFromArchive
 
 `removeFromArchive(path, id=0)`  
 
-Locate the given unique id in the index, delete the corresponding file and remove it from the index.
-
-### readArchiveIndex
-
-`readArchiveIndex(path)`
-
-Read the index and return it as a data frame. The user can search the index, for instance, by using dplyr, in order to locate files of interest.  
-
+Locate the given unique id in the index, delete the corresponding file and remove it from the index. Careful, there is no way back.
 
 ### checkArchive
 
 `checkArchive(path)`  
 
-Checks that the index and the files in the archive agree reporting any inconsistencies.   
+Checks that the index and the files in the archive are in sync, reporting any inconsistencies.   
 
 ### replaceTags
 
 `replaceTags(path, id, newtags)`
 
-For the file with the given id the existing tags are replaced by the newtags. If the first character of newtags is '+' then that character is removed and the newtags are added to the end of the existing tags.
+For the file with the given id, the existing tags are replaced by the newtags. If the first character of newtags is '+' then that character is removed and the newtags are added to the end of the existing tags.
 
 ## Example
 
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(fileArchive)
+library(fs)
 
 # --- location of the archive
 repo <- "C:/temp/testRepo"
+# --- a working directory
+wd   <- "C:/temp/wd"
 
 # --- create the archive
 createArchive(repo)
 
 # --- save some data in a file
 x <- c(4, 6, 2, -4)
-saveRDS(x, "C:/temp/wd/xData.rds")
+saveRDS(x, path(wd, "xData.rds"))
 
 # --- copy this file into the archive
-copyToArchive(repo, "C:/temp/wd/xData.rds", 
+copyToArchive(repo, 
+              path(wd, "xData.rds"), 
               name = "x",
               tags = "rds integers")
 
 # --- new version of x
 x[3] <- NA
-saveRDS(x, "C:/temp/wd/xData.rds")
+saveRDS(x, path(wd, "xData.rds"))
 
 # --- copy this version into the archive
-copyToArchive(repo, "C:/temp/wd/xData.rds", 
+copyToArchive(repo, 
+              path(wd, "xData.rds"), 
               name = "x",
               tags = "rds integers updated")
 
@@ -128,33 +126,36 @@ copyToArchive(repo, "C:/temp/wd/xData.rds",
 write.csv( data.frame(
               row   = 1:5,
               value = c("a", "a", "c", "b", "c")
-              ), file = "C:/temp/wd/values.csv")
+              ), file = path(wd, "values.csv")) 
 
 # --- copy csv file into the archive
-copyToArchive(repo, "C:/temp/wd/values.csv", 
+copyToArchive(repo, 
+              path(wd, "values.csv"), 
               name = "valueDF",
-              tags = "csv valus")
+              tags = "csv")
 
-# --- inspect the index
-readArchiveIndex(repo) %>%
+# --- print the index
+readRDS(path(repo, "index.rds")) %>%
   as_tibble()
 
 # --- correct the tags for entry with id = 3
-replaceTags(repo, id=3, newtags="csv values")
+replaceTags(repo, id=3, newtags="+values")
 
 # --- check the integrity of the archive
 checkArchive(repo)
 
 # --- find rds files, most recent first
-readArchiveIndex(repo) %>%
+readRDS(path(repo, "index.rds")) %>%
   as_tibble() %>%
   filter( substr(filename, 
                  nchar(filename)-2, nchar(filename)) == "rds" ) %>%
   arrange( desc(datetime)) -> rdsDF
 
-# --- read the most recent red file
+# --- read the most recent rdsDF file
 readRDS( file.path(repo, rdsDF$filename[1]))
 
 # --- look at the history file
-readLines( file.path(repo, "history.txt"))
+readLines( file.path(repo, "history.txt")) %>%
+  paste("\n") %>%
+  cat()
 ```

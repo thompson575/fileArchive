@@ -1,20 +1,22 @@
 #' @title replaceTags
 #'
 #' @description
-#' \code{replaceTags} deletes files from the archive.
+#' \code{replaceTags} replaces the tags in a selected file.
 #'
 #' @details
-#' \code{replaceTags} deletes file from an archive.
+#' \code{replaceTags} replaces the tags of a selected file and
+#' note the change in the history file. When the new tags begin "+" they
+#' are added to the end of the existing tags.
 #'
-#' see help(createArchive) for details of other archiving functions and of the
+#' see \code{\link[=createArchive]{createArchive()}} for details of other archiving functions and of the
 #' structure of the index.
 #'
 #' @param path path to the data archive
-#' @param id  id number(s) of entries to be deleted
-#' @param newtags  new tags to replace the olds ones
+#' @param id  id number of the file to be deleted
+#' @param newtags the replacement tags
 #'
 #' @examples
-#' replaceTags(path='MyStore', id=32, newtags="some new tags" )
+#' \dontrun{replaceTags(path='MyStore', id=32, newtags="some tags")}
 #'
 #' @export
 #'

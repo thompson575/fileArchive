@@ -9,20 +9,22 @@ replaceTags(path, id, newtags)
 \arguments{
 \item{path}{path to the data archive}
 
-\item{id}{id number(s) of entries to be deleted}
+\item{id}{id number of the file to be deleted}
 
-\item{newtags}{new tags to replace the olds ones}
+\item{newtags}{the replacement tags}
 }
 \description{
-\code{replaceTags} deletes files from the archive.
+\code{replaceTags} replaces the tags in a selected file.
 }
 \details{
-\code{replaceTags} deletes file from an archive.
+\code{replaceTags} replaces the tags of a selected file and
+note the change in the history file. When the new tags begin "+" they
+are added to the end of the existing tags.
 
-see help(createArchive) for details of other archiving functions and of the
+see \code{\link[=createArchive]{createArchive()}} for details of other archiving functions and of the
 structure of the index.
 }
 \examples{
-replaceTags(path='MyStore', id=32, newtags="some new tags" )
+\dontrun{replaceTags(path='MyStore', id=32, newtags="some tags")}
 
 }

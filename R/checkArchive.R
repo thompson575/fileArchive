@@ -1,17 +1,18 @@
 #' @title checkArchive
 #'
 #' @description
-#' \code{checkArchive} checks that index and archive contents agree.
+#' \code{checkArchive} checks that index and archive are consistent.
 #'
 #' @details
-#' \code{checkArchive} checks that index and archive contents agree.
+#' \code{checkArchive} checks that index and archive contents are consistent
+#' and prints details of any inconsistencies.
 #'
-#' see help(createArchive) for details of other archiving functions and of the contents of the index.
+#' see \code{\link[=createArchive]{createArchive()}} for details of other archiving functions and of the contents of the index.
 #'
 #' @param path path to the archive
 #'
 #' @examples
-#' checkArchive("C:/myStore")
+#' \dontrun{checkArchive("C:/myStore")}
 #'
 #' @export
 #'

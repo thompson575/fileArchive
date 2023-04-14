@@ -1,19 +1,20 @@
 #' @title removeFromArchive
 #'
 #' @description
-#' \code{removeFromArchive} deletes files from the archive.
+#' \code{removeFromArchive} deletes a file from the archive.
 #'
 #' @details
-#' \code{removeFromArchive} deletes file from an archive.
+#' \code{removeFromArchive} deletes a file from an archive, adjusts the index
+#'  and notes the deletion in the history file.
 #'
-#' see help(createArchive) for details of other archiving functions and of the
+#' see \code{\link[=createArchive]{createArchive()}} for details of other archiving functions and of the
 #' structure of the index.
 #'
-#' @param path path to the data archive
-#' @param id  id number(s) of entries to be deleted
+#' @param path path to the archive
+#' @param id  id number of the file to be deleted
 #'
 #' @examples
-#' removeFromArchive(path='MyStore', id=32 )
+#' \dontrun{removeFromArchive('C:/MyStore', id=32 )}
 #'
 #' @export
 #'
@@ -39,8 +40,7 @@ removeFromArchive <- function(path, id) {
               "  datetime:", INDEX$datetime[i], "\n"),
       file = file.path(path, "history.txt"),
       append=TRUE)
-  filename <- INDEX$filename[id]
-  INDEX <- INDEX[-id, ]
-  unlink( file.path(path, filename) )
+  unlink( file.path(path, INDEX$filename[i]) )
+  INDEX <- INDEX[-i, ]
   saveRDS(INDEX ,file=file.path(path, 'index.rds'))
 }

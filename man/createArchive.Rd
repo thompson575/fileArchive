@@ -7,30 +7,30 @@
 createArchive(path)
 }
 \arguments{
-\item{path}{path to this archive}
+\item{path}{path to the new archive}
 }
 \description{
 \code{createArchive} creates an archive folder with an index.
 }
 \details{
-\code{createArchive} creates an archive folder with an empty index.
+\code{createArchive} creates an archive folder with an empty index and
+a history file that automatically documents changes to the archive.
 
-The folder may already exist, but it must be empty.
+The archive folder may already exist, but if so, it must be empty.
 
 \itemize{
   \item copyToArchive() copies a file to the archive.
-  \item moveToArchive() moves a file into the archive.
-  \item dropFromArchive() removes a file from the archive and deletes it.
-  \item readArchiveIndex() returns the index of an archive as a tibble
-  \item editTags() enables editing tags.
+  \item removeFromArchive() removes a file from the archive and deletes it.
+  \item checkArchive() looks for inconsistencies between the folder content and the index.
+  \item replaceTags() replaces the old tags with new ones.
 }
 
 The index contains
 \itemize{
-  \item id ... an identification number 1, 2, 3, etc.
-  \item name ... a name given to the saved object
-  \item tags ... single string of tags
-  \item filename ... name of file within the archive
+  \item id ... an automatically assigned identification number: 1, 2, 3, etc.
+  \item name ... a name chosen by the user for file identification
+  \item tags ... a single string of tags
+  \item filename ... filename used in the archive
   \item datetime ... date and time when saved
 }
 }

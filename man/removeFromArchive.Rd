@@ -7,20 +7,21 @@
 removeFromArchive(path, id)
 }
 \arguments{
-\item{path}{path to the data archive}
+\item{path}{path to the archive}
 
-\item{id}{id number(s) of entries to be deleted}
+\item{id}{id number of the file to be deleted}
 }
 \description{
-\code{removeFromArchive} deletes files from the archive.
+\code{removeFromArchive} deletes a file from the archive.
 }
 \details{
-\code{removeFromArchive} deletes file from an archive.
+\code{removeFromArchive} deletes a file from an archive, adjusts the index
+ and notes the deletion in the history file.
 
-see help(createArchive) for details of other archiving functions and of the
+see \code{\link[=createArchive]{createArchive()}} for details of other archiving functions and of the
 structure of the index.
 }
 \examples{
-removeFromArchive(path='MyStore', id=32 )
+\dontrun{removeFromArchive('C:/MyStore', id=32 )}
 
 }

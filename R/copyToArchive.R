@@ -1,27 +1,36 @@
 #' @title copyToArchive
 #'
 #' @description
-#' \code{copyToArchive} adds a data object to an existing archive.
+#' \code{copyToArchive} copies a file to an existing archive.
 #'
 #' @details
-#' \code{copyToArchive} copies a file to the archive and adds to the index.
+#' \code{copyToArchive} copies a file to the archive, adds it to the index and
+#' records the transaction in the history file.
+#' The name used in the index need not be unique. Multiple files with the same
+#' identification name are treated as versions of the same data. If replace=TRUE
+#' all files with that index name are deleted before the new file is copied to
+#' the archive.
+#' If there is already a file in the archive with the same filename as the
+#' new file, the new file is given a replacement filename composed of the old
+#' filename plus a version number.
 #'
-#' see help(createArchive) for details of other archiving functions and of the
+#' see \code{\link[=createArchive]{createArchive()}} for details of other archiving functions and of the
 #' structure of the index.
 #'
 #' @param path path to the archive
-#' @param file path of the file to be copied
-#' @param name name used to identify the file
-#' @param tags string of information about the file
+#' @param file path of the file that is to be copied
+#' @param name name used to identify the file in the index
+#' @param tags single string of information about the file
 #' @param replace delete existing entries with the same name (TRUE) or
 #'             add to archive as a new version (FALSE). Defaults to FALSE
 #'
 #' @examples
-#' copyToArchive(path = "C:/Project/archive",
+#' \dontrun{copyToArchive(path = "C:/Project/archive",
 #'               file = "C:/temp/myFile.rds",
 #'               name = "New Results",
 #'               tags = "some interesting findings",
 #'               replace = TRUE)
+#'          }
 #'
 #' @export
 #'
