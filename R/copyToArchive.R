@@ -20,22 +20,33 @@
 #' @param path path to the archive
 #' @param file path of the file that is to be copied
 #' @param name name used to identify the file in the index
-#' @param tags single string of information about the file
+#' @param tag  single string of information about the file
 #' @param replace delete existing entries with the same name (TRUE) or
 #'             add to archive as a new version (FALSE). Defaults to FALSE
 #'
 #' @examples
 #' \dontrun{copyToArchive(path = "C:/Project/archive",
-#'               file = "C:/temp/myFile.rds",
-#'               name = "New Results",
-#'               tags = "some interesting findings",
+#'               file    = "C:/temp/myFile.rds",
+#'               name    = "New Results",
+#'               tag     = "some interesting findings",
 #'               replace = TRUE)
 #'          }
 #'
 #' @export
 #'
-copyToArchive <- function(path, file, name, tags="", replace=FALSE) {
-
+copyToArchive <- function(path, file, name, tag="", replace=FALSE) {
+  # --- check arguments
+  if( !(is.character(path) & length(path) == 1) ) {
+    stop("path must be a single string")
+  }
+  if( !(is.character(file) & length(file) == 1) ) {
+    stop("file must be a single string")
+  }
+  tag <- paste(tag, collapse = " , ")
+  if( !is.character(tag) ) {
+    stop("unable to collapse tag to a single string")
+  }
+  # --- check that archive exists
   if( !file.exists(path) ) {
     stop(paste("archive:", path, "does not exist"))
   }
@@ -53,7 +64,7 @@ copyToArchive <- function(path, file, name, tags="", replace=FALSE) {
         cat( paste( "\nRemoval:\n",
                     "  id:", INDEX$id[i], "\n",
                     "  name:", INDEX$name[i], "\n",
-                    "  tags:", INDEX$tags[i], "\n",
+                    "  tag:", INDEX$tag[i], "\n",
                     "  filename:", INDEX$filename[i], "\n",
                     "  datetime:", INDEX$datetime[i], "\n"),
              file = file.path(path, "history.txt"),
@@ -86,7 +97,7 @@ copyToArchive <- function(path, file, name, tags="", replace=FALSE) {
   INDEX <- rbind(INDEX,
                  data.frame(id=ifelse( nrow(INDEX) == 0, 1, max(INDEX$id)+1),
                             name=name,
-                            tags=tags,
+                            tag=tag,
                             filename=filename,
                             datetime=Sys.time(),
                             stringsAsFactors=FALSE) )
@@ -97,7 +108,7 @@ copyToArchive <- function(path, file, name, tags="", replace=FALSE) {
   cat( paste( "\nAddition:\n",
               "  id:", INDEX$id[i], "\n",
               "  name:", INDEX$name[i], "\n",
-              "  tags:", INDEX$tags[i], "\n",
+              "  tag:", INDEX$tag[i], "\n",
               "  filename:", INDEX$filename[i], "\n",
               "  datetime:", INDEX$datetime[i], "\n"),
        file = file.path(path, "history.txt"),

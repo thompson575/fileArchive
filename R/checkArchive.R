@@ -18,6 +18,11 @@
 #'
 checkArchive <- function(path) {
 
+  # --- check arguments
+  if( !(is.character(path) & length(path) == 1) ) {
+    stop("path must be a single string")
+  }
+
   # --- check that archive exists ---------------------------------
   if( !file.exists(path) ) {
     stop(paste("archive:", path, "does not exist"))
@@ -36,19 +41,19 @@ checkArchive <- function(path) {
   # --- Identify index entries with no file ---------------------
   for( i in 1:nIndex) {
     if( !(INDEX$filename[i] %in% files )) {
-      print(paste0(INDEX$filename[i], " does not exist" ))
+      warning(paste0(INDEX$filename[i], " does not exist" ))
       warn <- warn + 1
     }
   }
   # --- Identify files not in the index ---------------------------
   for(i in 1:nFiles ) {
     if( !(files[i] %in% c("index.rds", "history.txt", INDEX$filename) ) ) {
-      print(paste0(files[i]," is not in the index" ))
+      warning(paste0(files[i]," is not in the index" ))
       warn <- warn + 1
     }
   }
   # --- Is everything OK ---------------------------------------
   if( warn == 0 ) {
-    print("No Inconsistencies found")
+    warning("No Inconsistencies found")
   }
 }
