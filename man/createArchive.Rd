@@ -22,14 +22,14 @@ The archive folder may already exist, but if so, it must be empty.
   \item copyToArchive() copies a file to the archive.
   \item removeFromArchive() removes a file from the archive and deletes it.
   \item checkArchive() looks for inconsistencies between the folder content and the index.
-  \item replaceTags() replaces the old tags with new ones.
+  \item replaceTag() replaces the old tag with new one.
 }
 
 The index contains
 \itemize{
-  \item id ... an automatically assigned identification number: 1, 2, 3, etc.
-  \item name ... a name chosen by the user for file identification
-  \item tags ... a single string of tags
+  \item id       ... an automatically assigned identification number: 1, 2, 3, etc.
+  \item name     ... string identifier assigned by the user
+  \item tag      ... a single string of tags
   \item filename ... filename used in the archive
   \item datetime ... date and time when saved
 }

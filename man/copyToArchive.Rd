@@ -4,7 +4,7 @@
 \alias{copyToArchive}
 \title{copyToArchive}
 \usage{
-copyToArchive(path, file, name, tags = "", replace = FALSE)
+copyToArchive(path, file, name, tag = "", replace = FALSE)
 }
 \arguments{
 \item{path}{path to the archive}
@@ -13,7 +13,7 @@ copyToArchive(path, file, name, tags = "", replace = FALSE)
 
 \item{name}{name used to identify the file in the index}
 
-\item{tags}{single string of information about the file}
+\item{tag}{single string of information about the file}
 
 \item{replace}{delete existing entries with the same name (TRUE) or
 add to archive as a new version (FALSE). Defaults to FALSE}
@@ -37,9 +37,9 @@ structure of the index.
 }
 \examples{
 \dontrun{copyToArchive(path = "C:/Project/archive",
-              file = "C:/temp/myFile.rds",
-              name = "New Results",
-              tags = "some interesting findings",
+              file    = "C:/temp/myFile.rds",
+              name    = "New Results",
+              tag     = "some interesting findings",
               replace = TRUE)
          }
 

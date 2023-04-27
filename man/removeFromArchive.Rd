@@ -9,13 +9,13 @@ removeFromArchive(path, id)
 \arguments{
 \item{path}{path to the archive}
 
-\item{id}{id number of the file to be deleted}
+\item{id}{id number(s) of the file(s) to be deleted}
 }
 \description{
 \code{removeFromArchive} deletes a file from the archive.
 }
 \details{
-\code{removeFromArchive} deletes a file from an archive, adjusts the index
+\code{removeFromArchive} deletes one or more files from an archive, adjusts the index
  and notes the deletion in the history file.
 
 see \code{\link[=createArchive]{createArchive()}} for details of other archiving functions and of the
