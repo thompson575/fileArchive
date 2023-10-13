@@ -70,7 +70,7 @@ copyToArchive <- function(path, file, name, tag="", replace=FALSE) {
              file = file.path(path, "history.txt"),
              append=TRUE)
         # --- previous version found --------------------------------
-        unlink(file.path(path, INDEX$file[i]), force=TRUE, expand=FALSE)
+        unlink(file.path(path, INDEX$filename[i]), force=TRUE, expand=FALSE)
         # --- drop from index ---------------------------------------
         INDEX <- INDEX[-i, ]
         i <- i - 1
