@@ -4,10 +4,12 @@
 \alias{createArchive}
 \title{createArchive}
 \usage{
-createArchive(path)
+createArchive(path, destroy = FALSE)
 }
 \arguments{
 \item{path}{path to the new archive}
+
+\item{destroy}{if TRUE & path exists the contents of path are destroyed!! Defaults to FALSE}
 }
 \description{
 \code{createArchive} creates an archive folder with an index.
@@ -16,7 +18,8 @@ createArchive(path)
 \code{createArchive} creates an archive folder with an empty index and
 a history file that automatically documents changes to the archive.
 
-The archive folder may already exist, but if so, it must be empty.
+The archive folder may already exist, but if so, it should be empty. Setting clear = TRUE
+will destroy the contents of the archive folder and allow a new archive to be created.
 
 \itemize{
   \item copyToArchive() copies a file to the archive.
@@ -35,6 +38,6 @@ The index contains
 }
 }
 \examples{
-createArchive('C:/myStore')
+createArchive('C:/myStore', destroy = TRUE)
 
 }

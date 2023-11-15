@@ -1,10 +1,10 @@
-#' @title copyToArchive
+#' @title saveToArchive
 #'
 #' @description
-#' \code{copyToArchive} copies a file to an existing archive.
+#' \code{saveToArchive} save an R object to an existing archive.
 #'
 #' @details
-#' \code{copyToArchive} copies a file to the archive, adds it to the index and
+#' \code{saveToArchive} saves an object to the archive, adds it to the index and
 #' records the transaction in the history file.
 #' The name used in the index need not be unique. Multiple files with the same
 #' identification name are treated as versions of the same data. If replace=TRUE
@@ -17,17 +17,19 @@
 #' see \code{\link[=createArchive]{createArchive()}} for details of other archiving functions and of the
 #' structure of the index.
 #'
-#' @param path path to the archive
-#' @param file path of the file that is to be copied
+#' @param x R object to be save
+#' @param file path+name of the file that is to be used to save the object
+#' (path must point to an archive).
+#' Currently support rds and csv files
 #' @param name name used to identify the file in the index. Defaults to the name of the file to
-#' be copied without its extension.
+#' be saved without its extension.
 #' @param tag  single string of information about the file
 #' @param replace delete existing entries with the same name (TRUE) or
 #'             add to archive as a new version (FALSE). Defaults to FALSE
 #'
 #' @examples
-#' \dontrun{copyToArchive(path = "C:/Project/archive",
-#'               file    = "C:/temp/myFile.rds",
+#' \dontrun{saveToArchive(myData,
+#'               file    = "C:/archive/myFile.rds",
 #'               name    = "New Results",
 #'               tag     = "some interesting findings",
 #'               replace = TRUE)
@@ -35,11 +37,8 @@
 #'
 #' @export
 #'
-copyToArchive <- function(path, file, name="", tag="", replace=FALSE) {
+saveToArchive <- function(x, file, name="", tag="", replace=FALSE) {
   # --- check arguments
-  if( !(is.character(path) & length(path) == 1) ) {
-    stop("path must be a single string")
-  }
   if( !(is.character(file) & length(file) == 1) ) {
     stop("file must be a single string")
   }
@@ -47,6 +46,8 @@ copyToArchive <- function(path, file, name="", tag="", replace=FALSE) {
   if( !is.character(tag) ) {
     stop("unable to collapse tag to a single string")
   }
+  # --- extract archive path from file -----------------------------
+  path <- dirname(file)
   # --- check that archive exists
   if( !file.exists(path) ) {
     stop(paste("archive:", path, "does not exist"))
@@ -57,6 +58,23 @@ copyToArchive <- function(path, file, name="", tag="", replace=FALSE) {
   # --- Name missing ----------------------------------------------
   if( name == "" ) {
     name <- sub('\\..*$', '', basename(file))
+  }
+  # --- Create unique filename for new object -----------------------
+  filename <- basename(file)
+  root     <- sub('\\.([[:alnum:]]+)$', '', filename)
+  exten    <- gsub(root, '', filename)
+  if( file.exists( file.path(path, filename)) ) {
+    i <- 0
+    testname <- filename
+    while( file.exists( file.path(path, testname) )) {
+      i <- i + 1
+      testname <- paste0(root, "_v", i, exten)
+    }
+    filename <- testname
+  }
+  # --- write file to archive ---------------------------------------
+  if( !(exten %in% c(".rds", ".csv")) ) {
+    stop("Extension not supported")
   }
   # --- Read the index   ------------------------------------------
   INDEX <- readRDS( file.path(path, "index.rds") )
@@ -82,22 +100,12 @@ copyToArchive <- function(path, file, name="", tag="", replace=FALSE) {
       }
     }
   }
-
-  # --- Create unique filename for new object -----------------------
-  filename <- basename(file)
-  root     <- sub('\\.([[:alnum:]]+)$', '', filename)
-  exten    <- gsub(root, '', filename)
-  if( file.exists( file.path(path, filename)) ) {
-     i <- 0
-     testname <- filename
-     while( file.exists( file.path(path, testname) )) {
-       i <- i + 1
-       testname <- paste0(root, "_v", i, exten)
-     }
-     filename <- testname
-  }
   # --- write file to archive ---------------------------------------
-  file.copy(file, file.path(path, filename))
+  if( exten == ".rds") {
+    saveRDS(x, file)
+  } else if( exten == ".csv" ) {
+    write.csv(x, file)
+  }
   # --- update the index --------------------------------------------
   INDEX <- rbind(INDEX,
                  data.frame(id=ifelse( nrow(INDEX) == 0, 1, max(INDEX$id)+1),
@@ -110,7 +118,7 @@ copyToArchive <- function(path, file, name="", tag="", replace=FALSE) {
   saveRDS(INDEX ,file=file.path(path, "index.rds"))
 
   i <- nrow(INDEX)
-  cat( paste( "\nAddition (copied):\n",
+  cat( paste( "\nAddition (saved):\n",
               "  id:", INDEX$id[i], "\n",
               "  name:", INDEX$name[i], "\n",
               "  tag:", INDEX$tag[i], "\n",

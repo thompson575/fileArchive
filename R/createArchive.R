@@ -27,14 +27,14 @@
 #' }
 #'
 #' @param path path to the new archive
-#' @param clear if TRUE & path exists the contents of path are destroyed!! Defaults to FALSE
+#' @param destroy if TRUE & path exists the contents of path are destroyed!! Defaults to FALSE
 #'
 #' @examples
-#' createArchive('C:/myStore', clear = TRUE)
+#' createArchive('C:/myStore', destroy = TRUE)
 #'
 #' @export
 #'
-createArchive <- function(path, clear = FALSE) {
+createArchive <- function(path, destroy = FALSE) {
   # --- check argument
   if( !(is.character(path) & length(path) == 1) ) {
     stop("path must be a single string")
@@ -44,7 +44,7 @@ createArchive <- function(path, clear = FALSE) {
                                             all.files=TRUE,
                                             include.dirs = TRUE,
                                             no.. = TRUE)) > 0 ) {
-    if( clear ) unlink(path, recursive = TRUE)
+    if( destroy ) unlink(path, recursive = TRUE)
     else stop("Folder exists and is not empty")
   }
   # --- Does not exist .. create -----------------------------
